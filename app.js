@@ -30,6 +30,92 @@ function removerParticipante(botao) {
     }
 }
 
+// Trocar entre abas
+function trocarAba(aba) {
+    // Remove active de todos os botões e conteúdos
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+    // Ativa a aba selecionada
+    if (aba === 'manual') {
+        document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+        document.getElementById('aba-manual').classList.add('active');
+    } else {
+        document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+        document.getElementById('aba-massa').classList.add('active');
+    }
+}
+
+// Importar participantes em massa
+function importarEmMassa() {
+    const texto = document.getElementById('importacao-texto').value.trim();
+
+    if (!texto) {
+        alert('Por favor, cole a lista de participantes no campo de texto!');
+        return;
+    }
+
+    const linhas = texto.split('\n').filter(linha => linha.trim());
+    const lista = document.getElementById('participantes-lista');
+
+    // Limpa a lista atual
+    lista.innerHTML = '';
+
+    let importados = 0;
+    let erros = [];
+
+    linhas.forEach((linha, index) => {
+        const partes = linha.split(',').map(p => p.trim());
+
+        if (partes.length !== 2) {
+            erros.push(`Linha ${index + 1}: formato inválido (use: email, nome ou nome, email)`);
+            return;
+        }
+
+        let nome, email;
+
+        // Detecta qual é o email (contém @)
+        if (partes[0].includes('@')) {
+            email = partes[0];
+            nome = partes[1];
+        } else if (partes[1].includes('@')) {
+            nome = partes[0];
+            email = partes[1];
+        } else {
+            erros.push(`Linha ${index + 1}: nenhum email válido encontrado`);
+            return;
+        }
+
+        // Valida email
+        if (!validarEmail(email)) {
+            erros.push(`Linha ${index + 1}: email inválido (${email})`);
+            return;
+        }
+
+        // Adiciona participante
+        const novoItem = document.createElement('div');
+        novoItem.className = 'participante-item';
+        novoItem.innerHTML = `
+            <input type="text" placeholder="Nome" class="input-nome" value="${nome}" required>
+            <input type="email" placeholder="email@exemplo.com" class="input-email" value="${email}" required>
+            <button class="btn-remover" onclick="removerParticipante(this)">❌</button>
+        `;
+        lista.appendChild(novoItem);
+        importados++;
+    });
+
+    // Mostra resultado
+    if (importados > 0) {
+        alert(`✅ ${importados} participante(s) importado(s) com sucesso!${erros.length > 0 ? '\n\n⚠️ Erros:\n' + erros.join('\n') : ''}`);
+        // Volta para aba manual para ver os participantes
+        trocarAba('manual');
+        // Limpa o textarea
+        document.getElementById('importacao-texto').value = '';
+    } else {
+        alert('❌ Nenhum participante foi importado.\n\nErros:\n' + erros.join('\n'));
+    }
+}
+
 // Validação e coleta de dados
 function coletarParticipantes() {
     const items = document.querySelectorAll('.participante-item');

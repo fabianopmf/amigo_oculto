@@ -62,6 +62,67 @@
             margin-bottom: 15px;
         }
 
+        /* Abas */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            color: #667eea;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Importação em Massa */
+        #importacao-texto {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 200px;
+        }
+
+        #importacao-texto:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
         #participantes-lista {
             margin-bottom: 20px;
         }
@@ -274,16 +335,41 @@
 
         <section id="participantes-section" class="card">
             <h2>👥 Participantes</h2>
-            <div id="participantes-lista">
-                <div class="participante-item">
-                    <input type="text" placeholder="Nome" class="input-nome" required>
-                    <input type="email" placeholder="email@exemplo.com" class="input-email" required>
-                    <button class="btn-remover" onclick="removerParticipante(this)">❌</button>
-                </div>
+
+            <!-- Abas: Manual ou Em Massa -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="trocarAba('manual')">✍️ Manual</button>
+                <button class="tab-btn" onclick="trocarAba('massa')">📋 Importar em Massa</button>
             </div>
-            <button id="btn-adicionar" class="btn btn-secondary" onclick="adicionarParticipante()">
-                ➕ Adicionar Participante
-            </button>
+
+            <!-- Aba Manual -->
+            <div id="aba-manual" class="tab-content active">
+                <div id="participantes-lista">
+                    <div class="participante-item">
+                        <input type="text" placeholder="Nome" class="input-nome" required>
+                        <input type="email" placeholder="email@exemplo.com" class="input-email" required>
+                        <button class="btn-remover" onclick="removerParticipante(this)">❌</button>
+                    </div>
+                </div>
+                <button id="btn-adicionar" class="btn btn-secondary" onclick="adicionarParticipante()">
+                    ➕ Adicionar Participante
+                </button>
+            </div>
+
+            <!-- Aba Importar em Massa -->
+            <div id="aba-massa" class="tab-content">
+                <p class="info-text">
+                    Cole a lista de participantes abaixo. Use um dos formatos:<br>
+                    <strong>Formato 1:</strong> email@exemplo.com, Nome Completo<br>
+                    <strong>Formato 2:</strong> Nome Completo, email@exemplo.com<br>
+                    (Um participante por linha)
+                </p>
+                <textarea id="importacao-texto" placeholder="email@exemplo.com, João Silva&#10;maria@exemplo.com, Maria Santos&#10;pedro@exemplo.com, Pedro Oliveira" rows="10"></textarea>
+                <button class="btn btn-success" onclick="importarEmMassa()">
+                    📥 Importar Participantes
+                </button>
+            </div>
+
             <button id="btn-sortear" class="btn btn-primary" onclick="sortear()">
                 🎲 Realizar Sorteio
             </button>
@@ -357,6 +443,92 @@
                 botao.parentElement.remove();
             } else {
                 alert('Você precisa de pelo menos um participante!');
+            }
+        }
+
+        // Trocar entre abas
+        function trocarAba(aba) {
+            // Remove active de todos os botões e conteúdos
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Ativa a aba selecionada
+            if (aba === 'manual') {
+                document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+                document.getElementById('aba-manual').classList.add('active');
+            } else {
+                document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+                document.getElementById('aba-massa').classList.add('active');
+            }
+        }
+
+        // Importar participantes em massa
+        function importarEmMassa() {
+            const texto = document.getElementById('importacao-texto').value.trim();
+
+            if (!texto) {
+                alert('Por favor, cole a lista de participantes no campo de texto!');
+                return;
+            }
+
+            const linhas = texto.split('\n').filter(linha => linha.trim());
+            const lista = document.getElementById('participantes-lista');
+
+            // Limpa a lista atual
+            lista.innerHTML = '';
+
+            let importados = 0;
+            let erros = [];
+
+            linhas.forEach((linha, index) => {
+                const partes = linha.split(',').map(p => p.trim());
+
+                if (partes.length !== 2) {
+                    erros.push(`Linha ${index + 1}: formato inválido (use: email, nome ou nome, email)`);
+                    return;
+                }
+
+                let nome, email;
+
+                // Detecta qual é o email (contém @)
+                if (partes[0].includes('@')) {
+                    email = partes[0];
+                    nome = partes[1];
+                } else if (partes[1].includes('@')) {
+                    nome = partes[0];
+                    email = partes[1];
+                } else {
+                    erros.push(`Linha ${index + 1}: nenhum email válido encontrado`);
+                    return;
+                }
+
+                // Valida email
+                if (!validarEmail(email)) {
+                    erros.push(`Linha ${index + 1}: email inválido (${email})`);
+                    return;
+                }
+
+                // Adiciona participante
+                const novoItem = document.createElement('div');
+                novoItem.className = 'participante-item';
+                novoItem.innerHTML = `
+                    <input type="text" placeholder="Nome" class="input-nome" value="${nome}" required>
+                    <input type="email" placeholder="email@exemplo.com" class="input-email" value="${email}" required>
+                    <button class="btn-remover" onclick="removerParticipante(this)">❌</button>
+                `;
+                lista.appendChild(novoItem);
+                importados++;
+            });
+
+            // Mostra resultado
+            if (importados > 0) {
+                alert(`✅ ${importados} participante(s) importado(s) com sucesso!${erros.length > 0 ? '\n\n⚠️ Erros:\n' + erros.join('\n') : ''}`);
+                // Volta para aba manual para ver os participantes
+                trocarAba('manual');
+                // Limpa o textarea
+                document.getElementById('importacao-texto').value = '';
+            } else {
+                alert('❌ Nenhum participante foi importado.\n\nErros:\n' + erros.join('\n'));
             }
         }
 

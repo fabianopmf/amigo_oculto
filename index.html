@@ -16,16 +16,41 @@
         <!-- Seção 1: Adicionar Participantes -->
         <section id="participantes-section" class="card">
             <h2>👥 Participantes</h2>
-            <div id="participantes-lista">
-                <div class="participante-item">
-                    <input type="text" placeholder="Nome" class="input-nome" required>
-                    <input type="email" placeholder="email@exemplo.com" class="input-email" required>
-                    <button class="btn-remover" onclick="removerParticipante(this)">❌</button>
-                </div>
+
+            <!-- Abas: Manual ou Em Massa -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="trocarAba('manual')">✍️ Manual</button>
+                <button class="tab-btn" onclick="trocarAba('massa')">📋 Importar em Massa</button>
             </div>
-            <button id="btn-adicionar" class="btn btn-secondary" onclick="adicionarParticipante()">
-                ➕ Adicionar Participante
-            </button>
+
+            <!-- Aba Manual -->
+            <div id="aba-manual" class="tab-content active">
+                <div id="participantes-lista">
+                    <div class="participante-item">
+                        <input type="text" placeholder="Nome" class="input-nome" required>
+                        <input type="email" placeholder="email@exemplo.com" class="input-email" required>
+                        <button class="btn-remover" onclick="removerParticipante(this)">❌</button>
+                    </div>
+                </div>
+                <button id="btn-adicionar" class="btn btn-secondary" onclick="adicionarParticipante()">
+                    ➕ Adicionar Participante
+                </button>
+            </div>
+
+            <!-- Aba Importar em Massa -->
+            <div id="aba-massa" class="tab-content">
+                <p class="info-text">
+                    Cole a lista de participantes abaixo. Use um dos formatos:<br>
+                    <strong>Formato 1:</strong> email@exemplo.com, Nome Completo<br>
+                    <strong>Formato 2:</strong> Nome Completo, email@exemplo.com<br>
+                    (Um participante por linha)
+                </p>
+                <textarea id="importacao-texto" placeholder="email@exemplo.com, João Silva&#10;maria@exemplo.com, Maria Santos&#10;pedro@exemplo.com, Pedro Oliveira" rows="10"></textarea>
+                <button class="btn btn-success" onclick="importarEmMassa()">
+                    📥 Importar Participantes
+                </button>
+            </div>
+
             <button id="btn-sortear" class="btn btn-primary" onclick="sortear()">
                 🎲 Realizar Sorteio
             </button>
