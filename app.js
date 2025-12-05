@@ -316,10 +316,18 @@ async function enviarEmails() {
 async function enviarEmailBrevo(apiKey, pessoa, amigoOculto) {
     const emailHTML = gerarEmailHTML(pessoa.nome, amigoOculto.nome);
 
+    // Pega email e nome do remetente configurados
+    const senderEmail = document.getElementById('sender-email').value.trim() || localStorage.getItem('sender_email');
+    const senderName = document.getElementById('sender-name').value.trim() || localStorage.getItem('sender_name') || 'Amigo Oculto';
+
+    if (!senderEmail) {
+        throw new Error('Configure o email remetente nas configurações!');
+    }
+
     const payload = {
         sender: {
-            name: "Amigo Oculto Natal",
-            email: "noreply@amigoculto.com"
+            name: senderName,
+            email: senderEmail
         },
         to: [
             {
@@ -353,16 +361,29 @@ async function enviarEmailBrevo(apiKey, pessoa, amigoOculto) {
 window.addEventListener('DOMContentLoaded', () => {
     console.log('🎄 App de Amigo Oculto carregado!');
 
-    // Carrega API Key salva anteriormente
+    // Carrega configurações salvas
     const apiKeyInput = document.getElementById('brevo-api-key');
+    const senderEmailInput = document.getElementById('sender-email');
+    const senderNameInput = document.getElementById('sender-name');
+
     const savedKey = localStorage.getItem('brevo_api_key');
+    const savedEmail = localStorage.getItem('sender_email');
+    const savedName = localStorage.getItem('sender_name');
 
     if (apiKeyInput && savedKey) {
         apiKeyInput.value = savedKey;
         BREVO_API_KEY = savedKey;
     }
 
-    // Salva quando o usuário digitar uma nova chave
+    if (senderEmailInput && savedEmail) {
+        senderEmailInput.value = savedEmail;
+    }
+
+    if (senderNameInput && savedName) {
+        senderNameInput.value = savedName;
+    }
+
+    // Salva quando o usuário digitar
     if (apiKeyInput) {
         apiKeyInput.addEventListener('blur', () => {
             const newKey = apiKeyInput.value.trim();
@@ -370,6 +391,20 @@ window.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('brevo_api_key', newKey);
                 BREVO_API_KEY = newKey;
             }
+        });
+    }
+
+    if (senderEmailInput) {
+        senderEmailInput.addEventListener('blur', () => {
+            const email = senderEmailInput.value.trim();
+            if (email) localStorage.setItem('sender_email', email);
+        });
+    }
+
+    if (senderNameInput) {
+        senderNameInput.addEventListener('blur', () => {
+            const name = senderNameInput.value.trim();
+            if (name) localStorage.setItem('sender_name', name);
         });
     }
 });

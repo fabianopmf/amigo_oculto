@@ -53,15 +53,22 @@
         <!-- Configuração Brevo -->
         <footer>
             <details>
-                <summary>⚙️ Configurar Brevo API Key</summary>
+                <summary>⚙️ Configurar Brevo</summary>
                 <div class="config-box">
                     <label for="brevo-api-key">Brevo API Key:</label>
                     <input type="text" id="brevo-api-key" placeholder="Cole sua API Key do Brevo aqui">
+
+                    <label for="sender-email" style="margin-top: 15px;">Email Remetente (seu email validado no Brevo):</label>
+                    <input type="email" id="sender-email" placeholder="seu-email@gmail.com">
+
+                    <label for="sender-name" style="margin-top: 15px;">Nome do Remetente:</label>
+                    <input type="text" id="sender-name" placeholder="Amigo Oculto de Natal" value="Amigo Oculto">
+
                     <p class="small-text">
-                        <strong>Como obter:</strong><br>
-                        1. Acesse <a href="https://app.brevo.com/settings/keys/api" target="_blank">Brevo API Keys</a><br>
-                        2. Clique em "Criar Nova Chave"<br>
-                        3. Cole aqui e ela será salva localmente no seu navegador
+                        <strong>Como configurar:</strong><br>
+                        1. Acesse <a href="https://app.brevo.com/settings/keys/api" target="_blank">Brevo API Keys</a> e crie uma chave<br>
+                        2. Use SEU email (o mesmo da conta Brevo) como remetente<br>
+                        3. Tudo será salvo localmente no navegador
                     </p>
                 </div>
             </details>

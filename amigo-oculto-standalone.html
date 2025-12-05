@@ -308,15 +308,22 @@
 
         <footer>
             <details>
-                <summary>⚙️ Configurar Brevo API Key</summary>
+                <summary>⚙️ Configurar Brevo</summary>
                 <div class="config-box">
                     <label for="brevo-api-key">Brevo API Key:</label>
                     <input type="text" id="brevo-api-key" placeholder="Cole sua API Key do Brevo aqui">
+
+                    <label for="sender-email" style="margin-top: 15px;">Email Remetente (seu email validado no Brevo):</label>
+                    <input type="email" id="sender-email" placeholder="seu-email@gmail.com">
+
+                    <label for="sender-name" style="margin-top: 15px;">Nome do Remetente:</label>
+                    <input type="text" id="sender-name" placeholder="Amigo Oculto de Natal" value="Amigo Oculto">
+
                     <p class="small-text">
-                        <strong>Como obter:</strong><br>
-                        1. Acesse <a href="https://app.brevo.com/settings/keys/api" target="_blank">Brevo API Keys</a><br>
-                        2. Clique em "Criar Nova Chave"<br>
-                        3. Cole aqui e ela será salva localmente no seu navegador
+                        <strong>Como configurar:</strong><br>
+                        1. Acesse <a href="https://app.brevo.com/settings/keys/api" target="_blank">Brevo API Keys</a> e crie uma chave<br>
+                        2. Use SEU email (o mesmo da conta Brevo) como remetente<br>
+                        3. Tudo será salvo localmente no navegador
                     </p>
                 </div>
             </details>
@@ -619,10 +626,18 @@
         async function enviarEmailBrevo(apiKey, pessoa, amigoOculto) {
             const emailHTML = gerarEmailHTML(pessoa.nome, amigoOculto.nome);
 
+            // Pega email e nome do remetente configurados
+            const senderEmail = document.getElementById('sender-email').value.trim() || localStorage.getItem('sender_email');
+            const senderName = document.getElementById('sender-name').value.trim() || localStorage.getItem('sender_name') || 'Amigo Oculto';
+
+            if (!senderEmail) {
+                throw new Error('Configure o email remetente nas configurações!');
+            }
+
             const payload = {
                 sender: {
-                    name: "Amigo Oculto Natal",
-                    email: "noreply@amigoculto.com"
+                    name: senderName,
+                    email: senderEmail
                 },
                 to: [{
                     email: pessoa.email,
@@ -653,16 +668,29 @@
         window.addEventListener('DOMContentLoaded', () => {
             console.log('🎄 App de Amigo Oculto carregado!');
 
-            // Carrega API Key salva anteriormente
+            // Carrega configurações salvas
             const apiKeyInput = document.getElementById('brevo-api-key');
+            const senderEmailInput = document.getElementById('sender-email');
+            const senderNameInput = document.getElementById('sender-name');
+
             const savedKey = localStorage.getItem('brevo_api_key');
+            const savedEmail = localStorage.getItem('sender_email');
+            const savedName = localStorage.getItem('sender_name');
 
             if (apiKeyInput && savedKey) {
                 apiKeyInput.value = savedKey;
                 BREVO_API_KEY = savedKey;
             }
 
-            // Salva quando o usuário digitar uma nova chave
+            if (senderEmailInput && savedEmail) {
+                senderEmailInput.value = savedEmail;
+            }
+
+            if (senderNameInput && savedName) {
+                senderNameInput.value = savedName;
+            }
+
+            // Salva quando o usuário digitar
             if (apiKeyInput) {
                 apiKeyInput.addEventListener('blur', () => {
                     const newKey = apiKeyInput.value.trim();
@@ -670,6 +698,20 @@
                         localStorage.setItem('brevo_api_key', newKey);
                         BREVO_API_KEY = newKey;
                     }
+                });
+            }
+
+            if (senderEmailInput) {
+                senderEmailInput.addEventListener('blur', () => {
+                    const email = senderEmailInput.value.trim();
+                    if (email) localStorage.setItem('sender_email', email);
+                });
+            }
+
+            if (senderNameInput) {
+                senderNameInput.addEventListener('blur', () => {
+                    const name = senderNameInput.value.trim();
+                    if (name) localStorage.setItem('sender_name', name);
                 });
             }
         });
