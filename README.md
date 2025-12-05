@@ -12,26 +12,14 @@ Um aplicativo web simples para organizar sorteios de amigo oculto e enviar email
 
 ## 🚀 Como Usar
 
-### 1. Configurar Brevo (Gratuito)
+⚡ **A API Key do Brevo já está configurada!** Você pode começar a usar imediatamente.
 
-1. Acesse [Brevo.com](https://www.brevo.com/) e crie uma conta gratuita
-2. Faça login e vá em: **Configurações** → **SMTP & API** → **API Keys**
-3. Clique em **Criar Nova API Key**
-4. Dê um nome (ex: "Amigo Oculto") e copie a chave gerada
-5. **IMPORTANTE**: Guarde essa chave em local seguro!
-
-### 2. Abrir o Aplicativo
+### 1. Abrir o Aplicativo
 
 1. Abra o arquivo `index.html` no seu navegador
 2. Ou hospede em qualquer servidor web estático (GitHub Pages, Netlify, etc.)
 
-### 3. Configurar API Key
-
-1. No rodapé da página, clique em **"⚙️ Configurações Brevo API"**
-2. Cole sua API Key no campo
-3. Pronto! Agora você pode enviar emails
-
-### 4. Realizar o Sorteio
+### 2. Realizar o Sorteio
 
 1. Preencha nome e email de cada participante
 2. Clique em **"➕ Adicionar Participante"** para adicionar mais pessoas

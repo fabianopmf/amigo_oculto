@@ -2,6 +2,9 @@
 let participantes = [];
 let resultadoSorteio = [];
 
+// API Key do Brevo (configurada)
+const BREVO_API_KEY = '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';
+
 // Funções de manipulação de participantes
 function adicionarParticipante() {
     const lista = document.getElementById('participantes-lista');
@@ -261,7 +264,12 @@ function gerarEmailHTML(nomePessoa, nomeAmigoOculto) {
 
 // Envio de emails via Brevo
 async function enviarEmails() {
-    const apiKey = document.getElementById('brevo-api-key').value.trim();
+    // Usa a chave configurada ou a digitada pelo usuário
+    let apiKey = document.getElementById('brevo-api-key').value.trim();
+
+    if (!apiKey) {
+        apiKey = BREVO_API_KEY;
+    }
 
     if (!apiKey) {
         alert('Por favor, configure sua API Key do Brevo antes de enviar os emails!');
@@ -341,4 +349,10 @@ async function enviarEmailBrevo(apiKey, pessoa, amigoOculto) {
 // Inicialização
 window.addEventListener('DOMContentLoaded', () => {
     console.log('🎄 App de Amigo Oculto carregado!');
+
+    // Pré-preenche a API Key
+    const apiKeyInput = document.getElementById('brevo-api-key');
+    if (apiKeyInput && BREVO_API_KEY) {
+        apiKeyInput.value = BREVO_API_KEY;
+    }
 });
