@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎅 Amigo Oculto Natal 2025</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎄 Amigo Oculto de Natal 🎁</h1>
+            <p>Organize seu amigo secreto de forma fácil e rápida!</p>
+        </header>
+
+        <!-- Seção 1: Adicionar Participantes -->
+        <section id="participantes-section" class="card">
+            <h2>👥 Participantes</h2>
+            <div id="participantes-lista">
+                <div class="participante-item">
+                    <input type="text" placeholder="Nome" class="input-nome" required>
+                    <input type="email" placeholder="email@exemplo.com" class="input-email" required>
+                    <button class="btn-remover" onclick="removerParticipante(this)">❌</button>
+                </div>
+            </div>
+            <button id="btn-adicionar" class="btn btn-secondary" onclick="adicionarParticipante()">
+                ➕ Adicionar Participante
+            </button>
+            <button id="btn-sortear" class="btn btn-primary" onclick="sortear()">
+                🎲 Realizar Sorteio
+            </button>
+        </section>
+
+        <!-- Seção 2: Resultado do Sorteio -->
+        <section id="resultado-section" class="card hidden">
+            <h2>🎯 Resultado do Sorteio</h2>
+            <p class="info-text">Confira abaixo quem tirou quem:</p>
+            <div id="resultado-lista"></div>
+            <button id="btn-enviar" class="btn btn-success" onclick="enviarEmails()">
+                📧 Enviar Emails para Todos
+            </button>
+            <button class="btn btn-secondary" onclick="novoSorteio()">
+                🔄 Novo Sorteio
+            </button>
+        </section>
+
+        <!-- Seção 3: Status de Envio -->
+        <section id="status-section" class="card hidden">
+            <h2>📬 Status do Envio</h2>
+            <div id="status-lista"></div>
+        </section>
+
+        <!-- Configuração Brevo -->
+        <footer>
+            <details>
+                <summary>⚙️ Configurações Brevo API</summary>
+                <div class="config-box">
+                    <label for="brevo-api-key">Brevo API Key:</label>
+                    <input type="password" id="brevo-api-key" placeholder="Cole sua API Key do Brevo aqui">
+                    <p class="small-text">
+                        Não tem uma conta? <a href="https://www.brevo.com/" target="_blank">Crie grátis aqui</a>
+                        e obtenha sua API Key em: Configurações → SMTP & API → API Keys
+                    </p>
+                </div>
+            </details>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
