@@ -308,12 +308,15 @@
 
         <footer>
             <details>
-                <summary>⚙️ Configurações Brevo API (já configurada ✅)</summary>
+                <summary>⚙️ Configurar Brevo API Key</summary>
                 <div class="config-box">
                     <label for="brevo-api-key">Brevo API Key:</label>
-                    <input type="password" id="brevo-api-key" placeholder="Cole sua API Key do Brevo aqui">
+                    <input type="text" id="brevo-api-key" placeholder="Cole sua API Key do Brevo aqui">
                     <p class="small-text">
-                        ✅ API Key já configurada! Você pode começar a usar o app.
+                        <strong>Como obter:</strong><br>
+                        1. Acesse <a href="https://app.brevo.com/settings/keys/api" target="_blank">Brevo API Keys</a><br>
+                        2. Clique em "Criar Nova Chave"<br>
+                        3. Cole aqui e ela será salva localmente no seu navegador
                     </p>
                 </div>
             </details>
@@ -325,8 +328,8 @@
         let participantes = [];
         let resultadoSorteio = [];
 
-        // API Key do Brevo (configurada)
-        const BREVO_API_KEY = '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';
+        // API Key do Brevo - Configurar na interface
+        let BREVO_API_KEY = '';
 
         function adicionarParticipante() {
             const lista = document.getElementById('participantes-lista');
@@ -568,13 +571,20 @@
         }
 
         async function enviarEmails() {
+            // Pega a chave do campo ou do localStorage
             let apiKey = document.getElementById('brevo-api-key').value.trim();
-            if (!apiKey) apiKey = BREVO_API_KEY;
 
             if (!apiKey) {
-                alert('Por favor, configure sua API Key do Brevo antes de enviar os emails!');
+                apiKey = localStorage.getItem('brevo_api_key') || '';
+            }
+
+            if (!apiKey) {
+                alert('⚠️ Por favor, configure sua API Key do Brevo antes de enviar os emails!\n\nClique em "Configurações Brevo API" no rodapé e cole sua chave.');
                 return;
             }
+
+            // Salva a chave para próximas vezes
+            localStorage.setItem('brevo_api_key', apiKey);
 
             document.getElementById('status-section').classList.remove('hidden');
             const statusDiv = document.getElementById('status-lista');
@@ -642,9 +652,25 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             console.log('🎄 App de Amigo Oculto carregado!');
+
+            // Carrega API Key salva anteriormente
             const apiKeyInput = document.getElementById('brevo-api-key');
-            if (apiKeyInput && BREVO_API_KEY) {
-                apiKeyInput.value = BREVO_API_KEY;
+            const savedKey = localStorage.getItem('brevo_api_key');
+
+            if (apiKeyInput && savedKey) {
+                apiKeyInput.value = savedKey;
+                BREVO_API_KEY = savedKey;
+            }
+
+            // Salva quando o usuário digitar uma nova chave
+            if (apiKeyInput) {
+                apiKeyInput.addEventListener('blur', () => {
+                    const newKey = apiKeyInput.value.trim();
+                    if (newKey) {
+                        localStorage.setItem('brevo_api_key', newKey);
+                        BREVO_API_KEY = newKey;
+                    }
+                });
             }
         });
     </script>

@@ -2,8 +2,8 @@
 let participantes = [];
 let resultadoSorteio = [];
 
-// API Key do Brevo (configurada)
-const BREVO_API_KEY = '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';
+// API Key do Brevo - Configurar na interface
+let BREVO_API_KEY = '';
 
 // Funções de manipulação de participantes
 function adicionarParticipante() {
@@ -264,17 +264,20 @@ function gerarEmailHTML(nomePessoa, nomeAmigoOculto) {
 
 // Envio de emails via Brevo
 async function enviarEmails() {
-    // Usa a chave configurada ou a digitada pelo usuário
+    // Pega a chave do campo ou do localStorage
     let apiKey = document.getElementById('brevo-api-key').value.trim();
 
     if (!apiKey) {
-        apiKey = BREVO_API_KEY;
+        apiKey = localStorage.getItem('brevo_api_key') || '';
     }
 
     if (!apiKey) {
-        alert('Por favor, configure sua API Key do Brevo antes de enviar os emails!');
+        alert('⚠️ Por favor, configure sua API Key do Brevo antes de enviar os emails!\n\nClique em "Configurações Brevo API" no rodapé e cole sua chave.');
         return;
     }
+
+    // Salva a chave para próximas vezes
+    localStorage.setItem('brevo_api_key', apiKey);
 
     // Mostra seção de status
     document.getElementById('status-section').classList.remove('hidden');
@@ -350,9 +353,23 @@ async function enviarEmailBrevo(apiKey, pessoa, amigoOculto) {
 window.addEventListener('DOMContentLoaded', () => {
     console.log('🎄 App de Amigo Oculto carregado!');
 
-    // Pré-preenche a API Key
+    // Carrega API Key salva anteriormente
     const apiKeyInput = document.getElementById('brevo-api-key');
-    if (apiKeyInput && BREVO_API_KEY) {
-        apiKeyInput.value = BREVO_API_KEY;
+    const savedKey = localStorage.getItem('brevo_api_key');
+
+    if (apiKeyInput && savedKey) {
+        apiKeyInput.value = savedKey;
+        BREVO_API_KEY = savedKey;
+    }
+
+    // Salva quando o usuário digitar uma nova chave
+    if (apiKeyInput) {
+        apiKeyInput.addEventListener('blur', () => {
+            const newKey = apiKeyInput.value.trim();
+            if (newKey) {
+                localStorage.setItem('brevo_api_key', newKey);
+                BREVO_API_KEY = newKey;
+            }
+        });
     }
 });
