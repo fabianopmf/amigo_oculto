@@ -528,9 +528,11 @@ async function reenviarEmailIndividual() {
         if (!confirmacao) return;
 
         // Desabilita botão durante envio
-        const btnEnviar = event.target;
-        btnEnviar.disabled = true;
-        btnEnviar.textContent = '📤 Enviando...';
+        const btnEnviar = document.querySelector('#reenvio-section .btn-success');
+        if (btnEnviar) {
+            btnEnviar.disabled = true;
+            btnEnviar.textContent = '📤 Enviando...';
+        }
 
         // Cria objetos para envio
         const pessoa = { nome: nomeDestinatario, email: emailDestinatario };
@@ -546,17 +548,21 @@ async function reenviarEmailIndividual() {
         document.getElementById('reenvio-email-destinatario').value = '';
         document.getElementById('reenvio-nome-sorteado').value = '';
 
-        btnEnviar.disabled = false;
-        btnEnviar.textContent = '📤 Enviar Email';
+        if (btnEnviar) {
+            btnEnviar.disabled = false;
+            btnEnviar.textContent = '📤 Enviar Email';
+        }
 
     } catch (error) {
         alert(`❌ Erro ao enviar email: ${error.message}`);
         console.error('Erro no reenvio:', error);
 
         // Reabilita botão em caso de erro
-        const btnEnviar = event.target;
-        btnEnviar.disabled = false;
-        btnEnviar.textContent = '📤 Enviar Email';
+        const btnEnviar = document.querySelector('#reenvio-section .btn-success');
+        if (btnEnviar) {
+            btnEnviar.disabled = false;
+            btnEnviar.textContent = '📤 Enviar Email';
+        }
     }
 }
 
