@@ -292,6 +292,42 @@
             margin-top: 10px;
         }
 
+        /* Reenvio Individual */
+        .reenvio-form {
+            margin-top: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
         .hidden {
             display: none;
         }
@@ -322,6 +358,10 @@
             .btn {
                 width: 100%;
                 margin-right: 0;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -390,6 +430,38 @@
         <section id="status-section" class="card hidden">
             <h2>📬 Status do Envio</h2>
             <div id="status-lista"></div>
+        </section>
+
+        <!-- Seção 4: Reenviar Email Individual -->
+        <section id="reenvio-section" class="card">
+            <h2>📧 Reenviar Email Individual</h2>
+            <p class="info-text">
+                Use esta opção para reenviar o email de sorteio para um participante específico.
+            </p>
+
+            <div class="reenvio-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reenvio-nome-destinatario">Nome do Destinatário:</label>
+                        <input type="text" id="reenvio-nome-destinatario" placeholder="Nome de quem vai receber">
+                    </div>
+                    <div class="form-group">
+                        <label for="reenvio-email-destinatario">Email do Destinatário:</label>
+                        <input type="email" id="reenvio-email-destinatario" placeholder="email@exemplo.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reenvio-nome-sorteado">Nome de Quem Foi Sorteado:</label>
+                        <input type="text" id="reenvio-nome-sorteado" placeholder="Nome do amigo oculto">
+                    </div>
+                </div>
+
+                <button class="btn btn-success" onclick="reenviarEmailIndividual()">
+                    📤 Enviar Email
+                </button>
+            </div>
         </section>
 
         <footer>
@@ -880,6 +952,78 @@
             }
 
             return response.json();
+        }
+
+        // Reenviar email individual
+        async function reenviarEmailIndividual() {
+            try {
+                // Coleta dados do formulário
+                const nomeDestinatario = document.getElementById('reenvio-nome-destinatario').value.trim();
+                const emailDestinatario = document.getElementById('reenvio-email-destinatario').value.trim();
+                const nomeSorteado = document.getElementById('reenvio-nome-sorteado').value.trim();
+
+                // Validações
+                if (!nomeDestinatario || !emailDestinatario || !nomeSorteado) {
+                    alert('⚠️ Por favor, preencha todos os campos!');
+                    return;
+                }
+
+                if (!validarEmail(emailDestinatario)) {
+                    alert('⚠️ Email do destinatário inválido!');
+                    return;
+                }
+
+                // Pega a API Key
+                let apiKey = document.getElementById('brevo-api-key').value.trim();
+                if (!apiKey) {
+                    apiKey = localStorage.getItem('brevo_api_key') || '';
+                }
+
+                if (!apiKey) {
+                    alert('⚠️ Por favor, configure sua API Key do Brevo antes de enviar!\n\nClique em "Configurar Brevo" no rodapé.');
+                    return;
+                }
+
+                // Confirma antes de enviar
+                const confirmacao = confirm(
+                    `Confirma o envio do email?\n\n` +
+                    `Para: ${nomeDestinatario} (${emailDestinatario})\n` +
+                    `Amigo Oculto: ${nomeSorteado}`
+                );
+
+                if (!confirmacao) return;
+
+                // Desabilita botão durante envio
+                const btnEnviar = event.target;
+                btnEnviar.disabled = true;
+                btnEnviar.textContent = '📤 Enviando...';
+
+                // Cria objetos para envio
+                const pessoa = { nome: nomeDestinatario, email: emailDestinatario };
+                const amigoOculto = { nome: nomeSorteado };
+
+                // Envia email
+                await enviarEmailBrevo(apiKey, pessoa, amigoOculto);
+
+                alert(`✅ Email enviado com sucesso para ${nomeDestinatario}!`);
+
+                // Limpa os campos
+                document.getElementById('reenvio-nome-destinatario').value = '';
+                document.getElementById('reenvio-email-destinatario').value = '';
+                document.getElementById('reenvio-nome-sorteado').value = '';
+
+                btnEnviar.disabled = false;
+                btnEnviar.textContent = '📤 Enviar Email';
+
+            } catch (error) {
+                alert(`❌ Erro ao enviar email: ${error.message}`);
+                console.error('Erro no reenvio:', error);
+
+                // Reabilita botão em caso de erro
+                const btnEnviar = event.target;
+                btnEnviar.disabled = false;
+                btnEnviar.textContent = '📤 Enviar Email';
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {

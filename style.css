@@ -299,6 +299,42 @@ summary::-webkit-details-marker {
     text-decoration: underline;
 }
 
+/* Reenvio Individual */
+.reenvio-form {
+    margin-top: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.form-group input {
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
 /* Utility */
 .hidden {
     display: none;
@@ -332,5 +368,9 @@ summary::-webkit-details-marker {
     .btn {
         width: 100%;
         margin-right: 0;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
     }
 }

@@ -75,6 +75,38 @@
             <div id="status-lista"></div>
         </section>
 
+        <!-- Seção 4: Reenviar Email Individual -->
+        <section id="reenvio-section" class="card">
+            <h2>📧 Reenviar Email Individual</h2>
+            <p class="info-text">
+                Use esta opção para reenviar o email de sorteio para um participante específico.
+            </p>
+
+            <div class="reenvio-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reenvio-nome-destinatario">Nome do Destinatário:</label>
+                        <input type="text" id="reenvio-nome-destinatario" placeholder="Nome de quem vai receber">
+                    </div>
+                    <div class="form-group">
+                        <label for="reenvio-email-destinatario">Email do Destinatário:</label>
+                        <input type="email" id="reenvio-email-destinatario" placeholder="email@exemplo.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reenvio-nome-sorteado">Nome de Quem Foi Sorteado:</label>
+                        <input type="text" id="reenvio-nome-sorteado" placeholder="Nome do amigo oculto">
+                    </div>
+                </div>
+
+                <button class="btn btn-success" onclick="reenviarEmailIndividual()">
+                    📤 Enviar Email
+                </button>
+            </div>
+        </section>
+
         <!-- Configuração Brevo -->
         <footer>
             <details>

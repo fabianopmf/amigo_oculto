@@ -488,6 +488,78 @@ async function enviarEmailBrevo(apiKey, pessoa, amigoOculto) {
     return response.json();
 }
 
+// Reenviar email individual
+async function reenviarEmailIndividual() {
+    try {
+        // Coleta dados do formulário
+        const nomeDestinatario = document.getElementById('reenvio-nome-destinatario').value.trim();
+        const emailDestinatario = document.getElementById('reenvio-email-destinatario').value.trim();
+        const nomeSorteado = document.getElementById('reenvio-nome-sorteado').value.trim();
+
+        // Validações
+        if (!nomeDestinatario || !emailDestinatario || !nomeSorteado) {
+            alert('⚠️ Por favor, preencha todos os campos!');
+            return;
+        }
+
+        if (!validarEmail(emailDestinatario)) {
+            alert('⚠️ Email do destinatário inválido!');
+            return;
+        }
+
+        // Pega a API Key
+        let apiKey = document.getElementById('brevo-api-key').value.trim();
+        if (!apiKey) {
+            apiKey = localStorage.getItem('brevo_api_key') || '';
+        }
+
+        if (!apiKey) {
+            alert('⚠️ Por favor, configure sua API Key do Brevo antes de enviar!\n\nClique em "Configurar Brevo" no rodapé.');
+            return;
+        }
+
+        // Confirma antes de enviar
+        const confirmacao = confirm(
+            `Confirma o envio do email?\n\n` +
+            `Para: ${nomeDestinatario} (${emailDestinatario})\n` +
+            `Amigo Oculto: ${nomeSorteado}`
+        );
+
+        if (!confirmacao) return;
+
+        // Desabilita botão durante envio
+        const btnEnviar = event.target;
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = '📤 Enviando...';
+
+        // Cria objetos para envio
+        const pessoa = { nome: nomeDestinatario, email: emailDestinatario };
+        const amigoOculto = { nome: nomeSorteado };
+
+        // Envia email
+        await enviarEmailBrevo(apiKey, pessoa, amigoOculto);
+
+        alert(`✅ Email enviado com sucesso para ${nomeDestinatario}!`);
+
+        // Limpa os campos
+        document.getElementById('reenvio-nome-destinatario').value = '';
+        document.getElementById('reenvio-email-destinatario').value = '';
+        document.getElementById('reenvio-nome-sorteado').value = '';
+
+        btnEnviar.disabled = false;
+        btnEnviar.textContent = '📤 Enviar Email';
+
+    } catch (error) {
+        alert(`❌ Erro ao enviar email: ${error.message}`);
+        console.error('Erro no reenvio:', error);
+
+        // Reabilita botão em caso de erro
+        const btnEnviar = event.target;
+        btnEnviar.disabled = false;
+        btnEnviar.textContent = '📤 Enviar Email';
+    }
+}
+
 // Inicialização
 window.addEventListener('DOMContentLoaded', () => {
     console.log('🎄 App de Amigo Oculto carregado!');
