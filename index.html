@@ -9,18 +9,18 @@
 <body>
     <div class="container">
         <header>
-            <h1>🎄 Amigo Oculto de Natal 🎁</h1>
-            <p>Organize seu amigo secreto de forma fácil e rápida!</p>
+            <h1>Amigo Oculto de Natal</h1>
+            <p>Organize seu amigo secreto de forma fácil e rápida</p>
         </header>
 
         <!-- Seção 1: Adicionar Participantes -->
         <section id="participantes-section" class="card">
-            <h2>👥 Participantes</h2>
+            <h2>Participantes</h2>
 
             <!-- Abas: Manual ou Em Massa -->
             <div class="tabs">
-                <button class="tab-btn active" onclick="trocarAba('manual')">✍️ Manual</button>
-                <button class="tab-btn" onclick="trocarAba('massa')">📋 Importar em Massa</button>
+                <button class="tab-btn active" onclick="trocarAba('manual')">Manual</button>
+                <button class="tab-btn" onclick="trocarAba('massa')">Importar em Massa</button>
             </div>
 
             <!-- Aba Manual -->
@@ -29,11 +29,11 @@
                     <div class="participante-item">
                         <input type="text" placeholder="Nome" class="input-nome" required>
                         <input type="email" placeholder="email@exemplo.com" class="input-email" required>
-                        <button class="btn-remover" onclick="removerParticipante(this)">❌</button>
+                        <button class="btn-remover" onclick="removerParticipante(this)">×</button>
                     </div>
                 </div>
                 <button id="btn-adicionar" class="btn btn-secondary" onclick="adicionarParticipante()">
-                    ➕ Adicionar Participante
+                    Adicionar Participante
                 </button>
             </div>
 
@@ -47,37 +47,37 @@
                 </p>
                 <textarea id="importacao-texto" placeholder="email@exemplo.com, João Silva&#10;maria@exemplo.com, Maria Santos&#10;pedro@exemplo.com, Pedro Oliveira" rows="10"></textarea>
                 <button class="btn btn-success" onclick="importarEmMassa()">
-                    📥 Importar Participantes
+                    Importar Participantes
                 </button>
             </div>
 
             <button id="btn-sortear" class="btn btn-primary" onclick="sortear()">
-                🎲 Realizar Sorteio
+                Realizar Sorteio
             </button>
         </section>
 
         <!-- Seção 2: Resultado do Sorteio -->
         <section id="resultado-section" class="card hidden">
-            <h2>🎯 Resultado do Sorteio</h2>
+            <h2>Resultado do Sorteio</h2>
             <p class="info-text">Confira abaixo quem tirou quem:</p>
             <div id="resultado-lista"></div>
             <button id="btn-enviar" class="btn btn-success" onclick="enviarEmails()">
-                📧 Enviar Emails para Todos
+                Enviar Emails para Todos
             </button>
             <button class="btn btn-secondary" onclick="novoSorteio()">
-                🔄 Novo Sorteio
+                Novo Sorteio
             </button>
         </section>
 
         <!-- Seção 3: Status de Envio -->
         <section id="status-section" class="card hidden">
-            <h2>📬 Status do Envio</h2>
+            <h2>Status do Envio</h2>
             <div id="status-lista"></div>
         </section>
 
         <!-- Seção 4: Reenviar Email Individual -->
         <section id="reenvio-section" class="card">
-            <h2>📧 Reenviar Email Individual</h2>
+            <h2>Reenviar Email Individual</h2>
             <p class="info-text">
                 Use esta opção para reenviar o email de sorteio para um participante específico.
             </p>
@@ -102,7 +102,7 @@
                 </div>
 
                 <button class="btn btn-success" onclick="reenviarEmailIndividual()">
-                    📤 Enviar Email
+                    Enviar Email
                 </button>
             </div>
         </section>
@@ -110,7 +110,7 @@
         <!-- Configuração Brevo -->
         <footer>
             <details>
-                <summary>⚙️ Configurar Brevo</summary>
+                <summary>Configurar Brevo</summary>
                 <div class="config-box">
                     <label for="brevo-api-key">Brevo API Key:</label>
                     <input type="text" id="brevo-api-key" placeholder="Cole sua API Key do Brevo aqui">
